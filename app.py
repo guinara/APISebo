@@ -1,63 +1,66 @@
-from flask import Flask, jsonify, request
 import json
+from flask import Flask, request
+import pymongo
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+from bson import json_util
+import urllib.parse
+
+
+def parse_json(data):
+    return json.loads(json_util.dumps(data))
+
+
+# APIKey = 'qCLhKKgjcuhDM16reW2cdjAYmBHO9csVC8gUU8eyM63nq1Gl2MpUPNZNO0zyTWQY'
+uri = 'mongodb+srv://user:password415@sebopdw.0dlksoe.mongodb.net/'
+
+client = pymongo.MongoClient(uri, server_api=ServerApi('1'))
+db = client['Sebo']
+
 app = Flask(__name__)
-
-
-def api():
-    with open('data.json', mode='r') as my_file:
-        text = json.load(my_file)
-        return text
-
-
-users = api()
 
 
 @app.route('/users', methods=['GET'])
 def get_users():
-    """gets all users """
-    return jsonify(users)
+    """gets all Users """
+    Users = list(db.Users.find())
+    return parse_json(Users)
 
 
 @app.route('/users/<int:id>', methods=['GET'])
 def get_users_by_id(id):
-    """ gets users by id iterating the dict """
-    for user in users:
-        if user.get('id') == id:
-            return jsonify(user)
+    """ gets Users by id iterating the dict """
+    user = db.Users.find_one({"id": id})
+    return parse_json(user)
 
 
 @app.route('/users/<int:id>', methods=['PUT'])
 def edit_users_by_id(id):
-    """ edit users by id """
-    for index, user in enumerate(users):
-        altered_user = request.get_json()
-        if user.get('id') == id:
-            users[index].update(altered_user)
-            return jsonify(users[index])
+    """ edit Users by id """
+    updated_user = request.get_json()
+    db.Users.update_one({"id": id}, {"$set": updated_user})
+    return parse_json({"message": "Usuario atualizado com sucesso"})
 
 
 @app.route('/users/signup', methods=['POST'])
 def insert_new_user():
-    """ insert users by id """
+    """Insere um novo usuário no MongoDB"""
+
     new_user = request.get_json()
-    users.append(new_user)
-    return jsonify(users)
+    db.Users.insert_one(new_user)
+    return parse_json({"message": "Usuario inserido com sucesso"})
 
 
 @app.route('/users/<int:id>', methods=['DELETE'])
 def delete_user(id):
-    """ soft delete users by id """
-    for index, user in enumerate(users):
-        altered_user = request.get_json()
-        if user.get('id') == id:
-            del users[index]
-            users[index].update(altered_user)
-            return jsonify(users[index])
+    """Exclui um usuário por ID no MongoDB"""
+    db.Users.update_one({"id": id}, {"$set": {"Status": "Desativado"}})
+    return parse_json({"message": "Usuario excluído com sucesso"})
 
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return 'Bem vindo a API de SEBO online, consulte documentação para endpoints!'
 
 
 if __name__ == '__main__':
