@@ -1,25 +1,15 @@
-
 from flask import Flask, jsonify, request
-
+import json
 app = Flask(__name__)
 
-users = [
-    {
-        'id': 1,
-        'Nome': "Nara",
-        'E-mail': "gnara15@gmail.com",
-        'Tipo': "Comprador",
-        'Senha': 123,
-        'Status': "ativo"
-    }, {
-        'id': 2,
-        'Nome': "Quirino",
-        'E-mail': "luizfpq@ifsp.com",
-        'Tipo': "Vendedor",
-        'Senha': 23423,
-        'Status': "ativo"
-    }
-]
+
+def api():
+    with open('data.json', mode='r') as my_file:
+        text = json.load(my_file)
+        return text
+
+
+users = api()
 
 
 @app.route('/users', methods=['GET'])
@@ -65,4 +55,10 @@ def delete_user(id):
             return jsonify(users[index])
 
 
-app.run(port=5000, host='localhost', debug=True)
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+
+if __name__ == '__main__':
+    app.run(port=5000, host='localhost', debug=True)

@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "Nome": "Nara",
+        "E-mail": "gnara15@gmail.com",
+        "Tipo": "Comprador",
+        "Senha": 123,
+        "Status": "ativo"
+    },
+    {
+        "id": 2,
+        "Nome": "Quirino",
+        "E-mail": "luizfpq@ifsp.com",
+        "Tipo": "Vendedor",
+        "Senha": 23423,
+        "Status": "ativo"
+    }
+]
