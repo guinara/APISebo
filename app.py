@@ -10,7 +10,6 @@ def parse_json(data):
     return json.loads(json_util.dumps(data))
 
 
-# APIKey = 'qCLhKKgjcuhDM16reW2cdjAYmBHO9csVC8gUU8eyM63nq1Gl2MpUPNZNO0zyTWQY'
 uri = 'mongodb+srv://user:password415@sebopdw.0dlksoe.mongodb.net/'
 
 client = pymongo.MongoClient(uri, server_api=ServerApi('1'))
