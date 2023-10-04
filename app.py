@@ -1,7 +1,6 @@
 import json
 from flask import Flask, request
 import pymongo
-from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson import json_util
 import urllib.parse
