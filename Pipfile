@@ -21,6 +21,7 @@ tomlkit = "==0.12.1"
 werkzeug = "==3.0.0"
 wrapt = "==1.15.0"
 pymongo = "*"
+pyjwt = "*"
 
 [dev-packages]
 

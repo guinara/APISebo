@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8106aaafb6a7d3c10757b20e9d2c8780f25eb857b31878f19eed05a1b5733ec1"
+            "sha256": "6a8dace754ec218034d5c52e19b04a2a1c5b44e37c0ec72524569202a4336f73"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,13 @@
         ]
     },
     "default": {
+        "argon2": {
+            "hashes": [
+                "sha256:523a3d3b88f3a46244b4976a6ca81994705848538bbe9e41426ea54ccb75eb90"
+            ],
+            "index": "pypi",
+            "version": "==0.1.10"
+        },
         "autopep8": {
             "hashes": [
                 "sha256:067959ca4a07b24dbd5345efa8325f5f58da4298dab0dde0443d5ed765de80cb",
@@ -232,6 +239,15 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==2.11.0"
+        },
+        "pyjwt": {
+            "hashes": [
+                "sha256:57e28d156e3d5c10088e0c68abb90bfac3df82b40a71bd0daa20c65ccd5c23de",
+                "sha256:59127c392cc44c2da5bb3192169a91f429924e17aff6534d70fdc02ab3e04320"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==2.8.0"
         },
         "pymongo": {
             "hashes": [
