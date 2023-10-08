@@ -1,5 +1,5 @@
 import json
-from flask import Flask, request
+from flask import Flask, request,session
 import pymongo
 from pymongo.server_api import ServerApi
 from bson import json_util
@@ -18,13 +18,17 @@ client = pymongo.MongoClient(uri, server_api=ServerApi('1'))
 db = client['Sebo']
 
 app = Flask(__name__)
+app.secret_key = 'SenhaSecretaUOOOOU'
 
 
 @app.route('/users', methods=['GET'])
 def get_users():
     """gets all Users """
-    Users = list(db.Users.find())
-    return parse_json(Users)
+    if  'lul@ifsp.com' in session["E-mail"]:
+        Users = list(db.Users.find())
+        return parse_json(Users)
+    print(session)
+    return "Usuário precisa estar logado como admin"
 
 
 @app.route('/users/<int:id>', methods=['GET'])
@@ -53,17 +57,22 @@ def insert_new_user():
     senha_cripto = bcrypt.hashpw(senha_nao_cripto.encode('utf-8'), salt)
     senha_cripto = senha_cripto.decode('utf8').replace("'", '"')
     email = new_user["E-mail"]
-    tipo = new_user["Tipo"]
-    dicionario = {'id': contador, 'E-mail': email, 'Nome': nome,
-                  'Senha': senha_cripto, 'Status': 'Ativado', 'Tipo': tipo}
-    usuario = json.dumps(dicionario, indent=4)
-    db.Users.insert_one(dicionario)
-    return usuario
+    try:
+        user = db.Users.find({"E-mail": email})[0]
+        if user != None:
+            return "Usuário já cadastrado!"
+    except:
+        tipo = new_user["Tipo"]
+        dicionario = {'id': contador, 'E-mail': email, 'Nome': nome,
+                      'Senha': senha_cripto, 'Status': 'Ativado', 'Tipo': tipo}
+        usuario = json.dumps(dicionario, indent=4)
+        db.Users.insert_one(dicionario)
+        return usuario
 
 
-@app.route('/users/login', methods=['GET'])
+@app.route('/users/login', methods=['POST'])
 def login_user():
-    """Insere um novo usuário no MongoDB"""
+    """Cria sessão"""
     login = request.get_json()
     mail = login["E-mail"]
     try:
@@ -72,9 +81,16 @@ def login_user():
             passou = bcrypt.checkpw(login["Senha"].encode('utf-8'),
                                     user["Senha"].encode('utf-8'))
             if passou:
-                return "Usuário logado"
+                session["E-mail"]=user["E-mail"]
+                return "Usuário logado, Bem vindo(a) "+user["Nome"]
     except:
         return "Não achou"
+    
+@app.route('/users/logout', methods=['POST'])
+def logout_user():
+    """Encerra sessão"""
+    session.pop("E-mail", None)
+    return "Usuário deslogado"
 
 
 @app.route('/users/<int:id>', methods=['DELETE'])
@@ -91,27 +107,9 @@ def get_contador():
     return contador
 
 
-@app.route('/users/teste', methods=['POST'])
-def teste_insert():
-    """Insere um novo usuário no MongoDB"""
-    new_user = request.get_json()
-    contador = get_contador()
-    nome = new_user["Nome"]
-    senhaNaoCripto = new_user["Senha"]
-    salt = bcrypt.gensalt()
-    senha_cripto = bcrypt.hashpw(senhaNaoCripto.encode('utf-8'), salt)
-    senha_cripto = senha_cripto.decode('utf8').replace("'", '"')
-    email = new_user["E-mail"]
-    tipo = new_user["Tipo"]
-    dicionario = {'id': contador, 'E-mail': email, 'Nome': nome,
-                  'Senha': senha_cripto, 'Status': 'Ativado', 'Tipo': tipo}
-    usuario = json.dumps(dicionario, indent=4)
-    return usuario
-
-
 @app.route('/')
 def hello_world():
-    return 'Bem vindo a API de SEBO online, consulte documentação para endpoints!'
+    return 'Bem vindo a API de SEBO online'
 
 
 if __name__ == '__main__':
