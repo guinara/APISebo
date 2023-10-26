@@ -22,7 +22,7 @@ def get_items_by_id(id):
 
 
 @items.route('/', methods=['GET'])
-def get_items(id):
+def get_items():
     """ gets items by id iterating the dict """
     Items = list(db.Books.find())
     return parse_json(Items)
