@@ -23,13 +23,21 @@ db = client['Sebo']
 def get_users_by_id(id):
     """ gets Users by id iterating the dict """
     user = db.Users.find_one({"id": id})
-    return parse_json(user)
+    if user is None:
+        return parse_json({"message": "Usuário não encontrado!"}),404
+    elif user["Status"]=="Desativado":
+        return parse_json({"message": "Usuario "+user["Nome"]+" desativado!"})
+    return parse_json(user),200
 
 
 @users.route('/<int:id>', methods=['PUT'])
 def edit_users_by_id(id):
     """ edit Users by id """
     updated_user = request.get_json()
+    senha_nao_cripto= updated_user["Senha"]
+    salt = bcrypt.gensalt()
+    senha_cripto = bcrypt.hashpw(senha_nao_cripto.encode('utf-8'), salt)
+    updated_user["Senha"]= senha_cripto
     db.Users.update_one({"id": id}, {"$set": updated_user})
     return parse_json({"message": "Usuario atualizado com sucesso"})
 
@@ -48,7 +56,7 @@ def insert_new_user():
     try:
         user = db.Users.find({"E-mail": email})[0]
         if user != None:
-            return "Usuário já cadastrado!"
+            return parse_json({"message": "Usuário já cadastrado!"})
     except:
         tipo = new_user["Tipo"]
         dicionario = {'id': contador, 'E-mail': email, 'Nome': nome,
@@ -56,7 +64,6 @@ def insert_new_user():
         usuario = json.dumps(dicionario, indent=4)
         db.Users.insert_one(dicionario)
         return usuario
-
 
 @users.route('/login', methods=['POST'])
 def login_user():
@@ -70,11 +77,13 @@ def login_user():
                                     user["Senha"].encode('utf-8'))
             if passou:
                 session["E-mail"] = user["E-mail"]
-                return "Usuário logado, Bem vindo(a) "+user["Nome"]
+                message = parse_json({"message": "Usuário logado, Bem vindo(a) "+user["Nome"]})
+                return message
     except Exception as ex:
         template = "Uma excessão do tipo {0} ocorreu. Args:\n{1!r}"
-        menssagem = template.format(type(ex).__name__, ex.args)
-        return menssagem
+        mensagem = template.format(type(ex).__name__, ex.args)
+        mensagem=parse_json({"message": mensagem})
+        return mensagem
 
 
 @users.route('/logout', methods=['POST'])

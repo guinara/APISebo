@@ -3,7 +3,7 @@ from flask import Flask, Blueprint, request, session
 import pymongo
 from pymongo.server_api import ServerApi
 from .users import parse_json
-from .items import get_next_sequence
+from .books import get_next_sequence
 
 
 categorias = Blueprint('categorias', __name__)

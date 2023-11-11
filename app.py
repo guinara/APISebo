@@ -1,11 +1,8 @@
 from flask import Flask, Blueprint, request, session
 from routes.users import users
-from routes.items import items
+from routes.books import book
 from routes.admin import admin
 from routes.categorias import categorias
-
-
-
 
 
 app = Flask(__name__)
@@ -13,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = "SenhaSecretaUOOOOU"
 
 app.register_blueprint(users, url_prefix='/users')
-app.register_blueprint(items, url_prefix='/items')
+app.register_blueprint(book, url_prefix='/book')
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(categorias, url_prefix='/categorias')
 
