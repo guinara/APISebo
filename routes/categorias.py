@@ -17,22 +17,22 @@ db = client['Sebo']
 @categorias.route('/<int:id>', methods=['GET'])
 def get_categorias_by_id(id):
     """ gets categorias by id iterating the dict """
-    categoria = db.categorias.find_one({"IDCategoria": id})
+    categoria = db.categorias.find_one({"IDCategoria": id, "Status": "Ativo"})
     return parse_json(categoria)
 
 
 @categorias.route('/', methods=['GET'])
-def get_categorias(id):
+def get_categorias():
     """ gets categorias by id iterating the dict """
     categorias = list(db.categorias.find({"Status": "Ativo"}))
     return parse_json(categorias)
 
 
-@categorias.route('/search', methods=['GET'])
-def get_searched_itens(id):
-    """ gets categorias by search """
-    categorias = list(db.Books.find())
-    return parse_json(categorias)
+# @categorias.route('/search', methods=['GET'])
+# def get_searched_itens(id):
+#     """ gets categorias by search """
+#     categorias = list(db.Books.find())
+#     return parse_json(categorias)
 
 
 @categorias.route('/<int:id>', methods=['PUT'])
@@ -61,5 +61,6 @@ def insert_new_categoria():
 @categorias.route('/<int:id>', methods=['DELETE'])
 def delete_categoria(id):
     """Exclui um usuário por ID no MongoDB"""
-    db.categorias.update_one({"id": id}, {"$set": {"Status": "Desativado"}})
+    db.categorias.update_one({"IDCategoria": id}, {
+                             "$set": {"Status": "Desativado"}})
     return parse_json({"message": "categoria excluída com sucesso"})

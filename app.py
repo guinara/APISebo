@@ -1,4 +1,6 @@
 from flask import Flask, Blueprint, request, session
+# from flask_restful import Api, Resource
+# from flasgger import Swagger
 from routes.users import users
 from routes.books import book
 from routes.admin import admin
@@ -6,6 +8,23 @@ from routes.categorias import categorias
 
 
 app = Flask(__name__)
+# api = Api(app)
+# swagger = Swagger(app)
+
+
+# class InicioAPI(Resource):
+#     def get(self):
+#         """
+#         Inicio da api com a documentação
+#         ---
+#         responses:
+#           200:
+#             description: OK
+#         """
+#         return {'hello': 'world'}
+
+
+# api.add_resource(InicioAPI, '/inicio')
 # app.secret_key = os.environ.get('secret_key')
 app.secret_key = "SenhaSecretaUOOOOU"
 
