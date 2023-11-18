@@ -1,0 +1,706 @@
+{
+	"info": {
+		"_postman_id": "ad956c25-49bb-4ca7-8320-43042f396924",
+		"name": "Projeto API Sebo",
+		"description": "Projeto de API desenvolvido para a disciplina de PDW, criando uma API de sebo de livros com gerenciamento de itens, usuários e categorias.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30166475"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Login usuário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"E-mail\": \"{{E-mail}}\",\r\n\"Senha\": \"{{Senha}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						},
+						"description": "Inicia a sessão do usuário, parâmetros:\n\n- `E-mail` — Uma string com o e-mail do usuário já cadastrado\n- `Senha` — Uma string com a senha do usuário já cadastrado\n    \n\nRetorna status `200` com um Json com boas vindas caso seja encontrado um email no mongoDB, a senha esteja correta e o usuário for admin. Caso seja encontrado um e-mail, o usuário for admin mas a senha esteja incorreta retorna uma mensagem de erro e a resposta `401`.\n\nCaso não seja encontrada a mensagem ou ocorra algum erro retorna `500`"
+					},
+					"response": []
+				},
+				{
+					"name": "Editar usuário",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"Nome\" : \"{{Nome}}\",\r\n\"Tipo\" : \"{{Tipo}}\",\r\n\"E-mail\": \"{{E-mail}}\",\r\n\"Senha\":  \"{{Senha}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{id}}"
+							]
+						},
+						"description": "Edita um usuário, parâmetros:\n\n- `Nome` — Uma string com o nome do usuário\n    \n- `Tipo` — Uma string com a senha do usuário\n    \n- `E-mail` — Uma string com o e-mail do usuário\n    \n- `Senha` — Uma string com a senha do usuário\n    \n\nRetorna o usuário e status `201` caso seja atualizado com sucesso"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout usuário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						},
+						"description": "**Sem parâmetros**"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar usuários pelo id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{id}}"
+							]
+						},
+						"description": "`{{id}}` - Número do tipo inteiro representando o id do usuário procurado"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro usuário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"Nome\" : \"{{Nome}}\",\r\n\"Tipo\" : \"{{Tipo}}\",\r\n\"E-mail\": \"{{E-mail}}\",\r\n\"Senha\":  \"{{Senha}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"signup"
+							]
+						},
+						"description": "Cadastra um usuário, parâmetros:\n\n- `Nome` — Uma string com o nome do usuário\n- `Tipo` — Uma string com a senha do usuário\n- `E-mail` — Uma string com o e-mail do usuário\n- `Senha` — Uma string com a senha do usuário\n    \n\nRetorna o usuário e status `201` caso seja criado com sucesso"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete de usuário",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{id}}"
+							]
+						},
+						"description": "`id` - Número do tipo inteiro representando o item a ser deletado\n\nRetorna um JSON do item com o status desativado (soft delete) e `200` caso o delete seja bem sucedido"
+					},
+					"response": []
+				}
+			],
+			"description": "Rotas de gerenciamento de usuários",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Login admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"E-mail\": \"{{E-mail}}\",\r\n\"Senha\":  \"{{Senha}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"login"
+							]
+						},
+						"description": "Inicia a sessão do usuário, parâmetros:\n\n- `E-mail` — Uma string com o e-mail do admin já cadastrado\n- `Senha` — Uma string com a senha do admin já cadastrado\n    \n\nRetorna status `200` com um Json com boas vindas caso seja encontrado um email no mongoDB, a senha esteja correta e o usuário for admin. Caso seja encontrado um e-mail, o usuário for admin mas a senha esteja incorreta retorna uma mensagem de erro e a resposta `401`.\n\nCaso não seja encontrada a mensagem ou ocorra algum erro retorna `500`\n\nCria uma sessão com permissão de admin"
+					},
+					"response": []
+				},
+				{
+					"name": "Listagem geral de usuários",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verifica Cookie\", () => {\r",
+									"    pm.expect(pm.cookies.has('Session')).to.is.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						},
+						"description": "Necessário ter efetuado login na rota de \"Login admin\" e estar com sessão aberta"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"Nome\" : \"{{Nome}}\",\r\n\"Tipo\" : \"{{Tipo}}\",\r\n\"E-mail\": \"{{E-mail}}\",\r\n\"Senha\":  \"{{Senha}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"signup"
+							]
+						},
+						"description": "Cadastra um usuário com permissões admin, parâmetros:\n\n- `Nome` — Uma string com o nome do usuário\n    \n- `Tipo` — Uma string com a senha do usuário\n    \n- `E-mail` — Uma string com o e-mail do usuário\n    \n- `Senha` — Uma string com a senha do usuário\n    \n\nRetorna o usuário admin e status `201` caso seja criado com sucesso"
+					},
+					"response": []
+				}
+			],
+			"description": "Rotas com permissão de admistrador e login de administrador"
+		},
+		{
+			"name": "Categorias",
+			"item": [
+				{
+					"name": "Listar Categorias",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categorias",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categorias"
+							]
+						},
+						"description": "**Sem parâmetros**"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Categorias pelo id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categorias/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categorias",
+								"{{id}}"
+							]
+						},
+						"description": "`id` - Número do tipo inteiro representando a categoria procurada"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de categoria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Categoria\": \"{{Categoria}}\",\r\n        \"Descricao\": \"{{Descricao}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/categorias",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categorias"
+							]
+						},
+						"description": "Cadastra um usuário, parâmetros:\n\n- `Categoria` — Uma string com o nome da categoria\n    \n- `Descricao` — Uma string com uma descrição da categoria\n    \n\nRetorna a categoria criada e status `201` caso seja criado com sucesso"
+					},
+					"response": []
+				},
+				{
+					"name": "Editar categoria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Categoria\": \"{{Categoria}}\",\r\n        \"Descricao\": \"{{Descricao}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/categorias/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categorias",
+								"{{id}}"
+							]
+						},
+						"description": "Edita um usuário, parâmetros:\n\n- `Categoria` — Uma string com o nome da categoria\n    \n- `Descricao` — Uma string com uma descrição da categoria\n    \n\nRetorna uma mensagem de sucesso e status `201` caso seja atualizado com sucesso"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete de Categorias",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categorias/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categorias",
+								"{{id}}"
+							]
+						},
+						"description": "`id` - Número do tipo inteiro representando a categoria a ser deletada\n\nRetorna um JSON da categoria com o status desativado (soft delete) e `200` caso o delete seja bem sucedido"
+					},
+					"response": []
+				}
+			],
+			"description": "Aqui são cadastradas as categorias dos itens"
+		},
+		{
+			"name": "Itens",
+			"item": [
+				{
+					"name": "Listar itens pelo id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/book/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book",
+								"{{id}}"
+							]
+						},
+						"description": "`id` - Número do tipo inteiro representando o item buscado"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Teste Header\", () => {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Verifica Cookie\", () => {",
+									"    pm.expect(pm.cookies.has('JSession')).to.be.false;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Titulo\": \"{{Titulo}}\",\r\n    \"Autor\": \"{{Autor}}\",\r\n    \"Categoria\":  \"{{Categoria}}\",\r\n    \"PageCount\":  \"{{Contagem Páginas}}\" ,\r\n    \"Preco\":  \"{{Preço}}\",\r\n    \"Sinopse\":  \"{{Sinopse}}\",\r\n    \"Data de edicao\":  \"{{Data de edicao}}\",\r\n    \"Periodicidade\":  \"{{Periodicidade}}\",\r\n    \"IDVendedor\":  \"{{IDVendedor}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/book",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book"
+							]
+						},
+						"description": "Cadastra um item, parâmetros:\n\n- `Titulo` — Uma string com o título do item\n- `Autor` — Uma string com o nome do autor\n- `PageCount` — Um inteiro com a contagem de páginas\n- `Preco` — Decimal com o preço do item\n- `Sinopse` — Uma string com o nome do categoria\n- `ISBN` — Uma string de 10 a 13 caracteres representando o id único universal do livro\n- `Data de edicao` — Uma string com a data de publicação do item\n- `Periodicidade` — Uma string com a periodicidade de publicação\n- `IDVendedor`— Um inteiro com o id do vendedor, correspondendo a um usuário\n    \n\nRetorna uma mensagem de sucesso e status `201` caso seja criado com sucesso"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar itens",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Teste Status OK\", () => {",
+									"pm.response.to.have.status(200)",
+									"});",
+									"",
+									"pm.test(\"Teste Header\", () => {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Valida Json\", () => {",
+									"   pm.response.to.be.json; ",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/book/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book",
+								""
+							]
+						},
+						"description": "**Sem parâmetros**"
+					},
+					"response": []
+				},
+				{
+					"name": "Editar item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Titulo\": \"{{Titulo}}\",\r\n    \"Autor\": \"{{Autor}}\",\r\n    \"Categoria\":  \"{{Categoria}}\",\r\n    \"PageCount\":  \"{{Contagem Páginas}}\" ,\r\n    \"Preco\":  \"{{Preço}}\",\r\n    \"Sinopse\":  \"{{Sinopse}}\",\r\n    \"Data de edicao\":  \"{{Data de edicao}}\",\r\n    \"Periodicidade\":  \"{{Periodicidade}}\",\r\n    \"IDVendedor\":  \"{{IDVendedor}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/book/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book",
+								"{{id}}"
+							]
+						},
+						"description": "Atualiza um item, parâmetros:\n\n- `Titulo` — Uma string com o título do item\n    \n- `Autor` — Uma string com o nome do autor\n    \n- `PageCount` — Um inteiro com a contagem de páginas\n    \n- `Preco` — Decimal com o preço do item\n    \n- `Sinopse` — Uma string com o nome do categoria\n    \n- `ISBN` — Uma string de 10 a 13 caracteres representando o id único universal do livro\n    \n- `Data de edicao` — Uma string com a data de publicação do item\n    \n- `Periodicidade` — Uma string com a periodicidade de publicação\n    \n- `IDVendedor`— Um inteiro com o id do vendedor, correspondendo a um usuário\n    \n\nRetorna uma mensagem de sucesso e status `201` caso seja atualizado com sucesso"
+					},
+					"response": []
+				},
+				{
+					"name": "Pesquisa de itens",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/book/search?Autor=George Orwell&Titulo=1984&ISBN=8535914846",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book",
+								"search"
+							],
+							"query": [
+								{
+									"key": "Autor",
+									"value": "George Orwell"
+								},
+								{
+									"key": "Titulo",
+									"value": "1984",
+									"description": "Titulo do item"
+								},
+								{
+									"key": "ISBN",
+									"value": "8535914846",
+									"description": "Código de 10 digitos identificador do livro"
+								}
+							]
+						},
+						"description": "Pesquisa itens por dois parâmetros\n\n- `Titulo` — Uma string com o título do item\n- `Autor` — Uma string com o nome do autor\n    \n\nCaso encontre o item retorna `200`e caso não retorna `404`com uma mensagem"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete de item",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/book/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book",
+								"{{id}}"
+							]
+						},
+						"description": "`id` - Número do tipo inteiro representando o item a ser deletado\n\nRetorna um JSON do item com o status desativado (soft delete) e `200` caso o delete seja bem sucedido"
+					},
+					"response": []
+				}
+			],
+			"description": "Gerenciamento de itens (Livros, revistas, etc)"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": "id",
+			"type": "string"
+		}
+	]
+}

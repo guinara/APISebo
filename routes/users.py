@@ -7,8 +7,11 @@ from bson import json_util
 import bcrypt
 
 import urllib.parse
+
+
 def parse_json(data):
     return json.loads(json_util.dumps(data))
+
 
 users = Blueprint('users', __name__, static_folder=None)
 
@@ -21,25 +24,25 @@ db = client['Sebo']
 
 @users.route('/<int:id>', methods=['GET'])
 def get_users_by_id(id):
-    """ gets Users by id iterating the dict """
+    """ Listagem de usuários pelo ID """
     user = db.Users.find_one({"id": id})
     if user is None:
-        return parse_json({"message": "Usuário não encontrado!"}),404
-    elif user["Status"]=="Desativado":
+        return parse_json({"message": "Usuário não encontrado!"}), 404
+    elif user["Status"] == "Desativado":
         return parse_json({"message": "Usuario "+user["Nome"]+" desativado!"})
-    return parse_json(user),200
+    return parse_json(user), 200
 
 
 @users.route('/<int:id>', methods=['PUT'])
 def edit_users_by_id(id):
-    """ edit Users by id """
+    """ Atualização de usuário """
     updated_user = request.get_json()
-    senha_nao_cripto= updated_user["Senha"]
+    senha_nao_cripto = updated_user["Senha"]
     salt = bcrypt.gensalt()
     senha_cripto = bcrypt.hashpw(senha_nao_cripto.encode('utf-8'), salt)
-    updated_user["Senha"]= senha_cripto
+    updated_user["Senha"] = senha_cripto
     db.Users.update_one({"id": id}, {"$set": updated_user})
-    return parse_json({"message": "Usuario atualizado com sucesso"})
+    return parse_json({"message": "Usuario atualizado com sucesso"}), 201
 
 
 @users.route('/signup', methods=['POST'])
@@ -63,7 +66,8 @@ def insert_new_user():
                       'Senha': senha_cripto, 'Status': 'Ativado', 'Tipo': tipo}
         usuario = json.dumps(dicionario, indent=4)
         db.Users.insert_one(dicionario)
-        return usuario
+        return usuario, 201
+
 
 @users.route('/login', methods=['POST'])
 def login_user():
@@ -77,13 +81,16 @@ def login_user():
                                     user["Senha"].encode('utf-8'))
             if passou:
                 session["E-mail"] = user["E-mail"]
-                message = parse_json({"message": "Usuário logado, Bem vindo(a) "+user["Nome"]})
+                message = parse_json(
+                    {"message": "Usuário logado, Bem vindo(a) "+user["Nome"]}), 200
                 return message
+            return parse_json(
+                {"Erro": "Senha inválida"}), 401
     except Exception as ex:
         template = "Uma excessão do tipo {0} ocorreu. Args:\n{1!r}"
         mensagem = template.format(type(ex).__name__, ex.args)
-        mensagem=parse_json({"message": mensagem})
-        return mensagem
+        mensagem = parse_json({"message": mensagem})
+        return mensagem, 500
 
 
 @users.route('/logout', methods=['POST'])
@@ -98,7 +105,7 @@ def logout_user():
 def delete_user(id):
     """Exclui um usuário por ID no MongoDB"""
     db.Users.update_one({"id": id}, {"$set": {"Status": "Desativado"}})
-    return parse_json({"message": "Usuario excluído com sucesso"})
+    return parse_json({"message": "Usuario excluído com sucesso"}), 200
 
 
 def get_contador():

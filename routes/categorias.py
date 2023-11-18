@@ -40,7 +40,7 @@ def edit_categorias_by_id(id):
     """ edit categorias by id """
     updated_categoria = request.get_json()
     db.categorias.update_one({"IDCategoria": id}, {"$set": updated_categoria})
-    return parse_json({"message": "categoria atualizado com sucesso"})
+    return parse_json({"message": "categoria atualizado com sucesso"}), 201
 
 
 @categorias.route('/', methods=['POST'])
@@ -53,9 +53,9 @@ def insert_new_categoria():
         'Categoria': new_categoria["Categoria"],
         'Descricao': new_categoria["Descricao"]
     }
-    usuario = json.dumps(dicionario, indent=4)
-    db.categorias.insert_one(dicionario)
-    return usuario
+    categoria = json.dumps(dicionario, indent=4)
+    db.categorias.insert_one(categoria)
+    return categoria, 201
 
 
 @categorias.route('/<int:id>', methods=['DELETE'])
