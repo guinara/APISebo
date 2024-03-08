@@ -9,25 +9,13 @@ from routes.categorias import categorias
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+<<<<<<< HEAD
 cors = CORS(app)
 # api = Api(app)
 # swagger = Swagger(app)
+=======
+>>>>>>> b109d87e218f0e1344409849f53315e8f885d2ad
 
-
-# class InicioAPI(Resource):
-#     def get(self):
-#         """
-#         Inicio da api com a documentação
-#         ---
-#         responses:
-#           200:
-#             description: OK
-#         """
-#         return {'hello': 'world'}
-
-
-# api.add_resource(InicioAPI, '/inicio')
-# app.secret_key = os.environ.get('secret_key')
 app.secret_key = "SenhaSecretaUOOOOU"
 
 app.register_blueprint(users, url_prefix='/users')
