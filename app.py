@@ -9,12 +9,9 @@ from routes.categorias import categorias
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-<<<<<<< HEAD
 cors = CORS(app)
 # api = Api(app)
 # swagger = Swagger(app)
-=======
->>>>>>> b109d87e218f0e1344409849f53315e8f885d2ad
 
 app.secret_key = "SenhaSecretaUOOOOU"
 
