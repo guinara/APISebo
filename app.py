@@ -6,8 +6,10 @@ from routes.books import book
 from routes.admin import admin
 from routes.categorias import categorias
 
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
 # api = Api(app)
 # swagger = Swagger(app)
 
@@ -34,7 +36,11 @@ app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(categorias, url_prefix='/categorias')
 
 
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+
 @app.route('/')
+@cross_origin()
 def hello_world():
     return 'Bem vindo a API de SEBO online'
 
